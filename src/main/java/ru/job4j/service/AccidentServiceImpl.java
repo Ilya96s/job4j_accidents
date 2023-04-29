@@ -15,8 +15,11 @@ import java.util.Optional;
  */
 @ThreadSafe
 @Service
-public class ImplAccidentService implements AccidentService {
+public class AccidentServiceImpl implements AccidentService {
 
+    /**
+     * Хранилище инцидентов
+     */
     private AccidentRepository accidentRepository;
 
     /**

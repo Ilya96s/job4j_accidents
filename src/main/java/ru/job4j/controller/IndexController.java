@@ -5,7 +5,7 @@ import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import ru.job4j.service.ImplAccidentService;
+import ru.job4j.service.AccidentService;
 
 /**
  * IndexController - контроллер для главной страницы
@@ -17,7 +17,10 @@ import ru.job4j.service.ImplAccidentService;
 @AllArgsConstructor
 public class IndexController {
 
-    private final ImplAccidentService implAccidentService;
+    /**
+     * Сервис по работе с инцидентами
+     */
+    private final AccidentService accidentService;
 
     /**
      * Возвращает страницу с отображением всех заявлений
@@ -28,7 +31,7 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("user", "Petr Arsentev");
-        model.addAttribute("accidents", implAccidentService.findAll());
+        model.addAttribute("accidents", accidentService.findAll());
         return "index";
     }
 }

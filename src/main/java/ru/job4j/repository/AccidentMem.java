@@ -30,9 +30,21 @@ public class AccidentMem implements AccidentRepository {
     private final Map<Integer, Accident> accidents = new ConcurrentHashMap<Integer, Accident>();
 
     public AccidentMem() {
-        accidents.put(1, new Accident(1, "Петр Петров", "Превышение скорости", "Красный Проспект, 3"));
-        accidents.put(2, new Accident(2, "Иван Иванов", "Проезд на красный свет светофора", "Блюхера, 12"));
-        accidents.put(3, new Accident(3, "Олег Олегов", "Проезд через двойную сплошную", "Мичурина, 31"));
+        var accident1 = new Accident();
+        accident1.setName("Петр Петров");
+        accident1.setText("Превышение скорости");
+        accident1.setAddress("Красный проспект 3");
+        var accident2 = new Accident();
+        accident2.setName("Иван Иванов");
+        accident2.setText("Проезд на красный свет светофора");
+        accident2.setAddress("Блюхера 12");
+        var accident3 = new Accident();
+        accident3.setName("Олег Олегов");
+        accident3.setText("Проезд через двойную сплошную");
+        accident3.setAddress("Мичурина 31");
+        save(accident1);
+        save(accident2);
+        save(accident3);
     }
 
     /**
