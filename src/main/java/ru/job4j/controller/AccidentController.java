@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.model.Accident;
 import ru.job4j.service.AccidentService;
 import ru.job4j.service.AccidentTypeService;
+import ru.job4j.service.RuleService;
+
+import java.util.List;
 
 /**
  * @author Ilya Kaltygin
@@ -29,6 +32,11 @@ public class AccidentController {
     private final AccidentTypeService accidentTypeService;
 
     /**
+     * Сервис по работе со статьями
+     */
+    private final RuleService ruleService;
+
+    /**
      * Возвращает страницу для создания инцидента
      *
      * @param model модель с данными
@@ -36,6 +44,7 @@ public class AccidentController {
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
         model.addAttribute("types", accidentTypeService.findAllTypes());
+        model.addAttribute("rules", ruleService.findAllRules());
         return "createAccident";
     }
 
@@ -43,12 +52,15 @@ public class AccidentController {
      * Соханяет инцидент в хранилище
      *
      * @param accident инцидент
+     * @param model модель с данными
+     * @param rIds список идентификаторов статей
      * @return если сохраение прошло успешно, то перенапрвляет на странциу по url "/"
      */
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident,
-                       Model model) {
-        if (accidentService.save(accident).isEmpty()) {
+                       Model model,
+                       @RequestParam("rIds") List<Integer> rIds) {
+        if (accidentService.save(accident, rIds).isEmpty()) {
             model.addAttribute("message", "Не удалось сохранить инцидент");
             return "errors/error";
         }

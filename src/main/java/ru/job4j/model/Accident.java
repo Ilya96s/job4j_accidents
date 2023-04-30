@@ -2,6 +2,8 @@ package ru.job4j.model;
 
 import lombok.*;
 
+import java.util.Set;
+
 
 /**
  * Accident - модель данных - правонарушения
@@ -25,4 +27,6 @@ public class Accident {
     private String address;
 
     private AccidentType type;
+
+    private Set<Rule> rules;
 }

@@ -1,13 +1,14 @@
 package ru.job4j.service;
 
+import lombok.AllArgsConstructor;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.model.Accident;
-import ru.job4j.model.AccidentType;
 import ru.job4j.repository.AccidentRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * AccidentService - сервис, описывающий логику работы
@@ -16,31 +17,44 @@ import java.util.Optional;
  */
 @ThreadSafe
 @Service
+@AllArgsConstructor
 public class AccidentServiceImpl implements AccidentService {
 
     /**
      * Хранилище инцидентов
      */
-    private AccidentRepository accidentRepository;
+    private final AccidentRepository accidentRepository;
 
     /**
      * Сервис по работе с типами инцидентов
      */
-    private AccidentTypeService accidentTypeService;
+    private final AccidentTypeService accidentTypeService;
+
+    /**
+     * Сервис по работе со статьями
+     */
+    private final RuleService ruleService;
 
     /**
      * Добавить инцидент в хранилище
      *
      * @param accident инцидент
+     * @param rIds список идентификаторов статей
      * @return Optional.of(accident) если инцидент добавлен успешно, иначе Optional.empty()
      */
     @Override
-    public Optional<Accident> save(Accident accident) {
+    public Optional<Accident> save(Accident accident, List<Integer> rIds) {
         var optionalAccidentType = accidentTypeService.findTypeById(accident.getType().getId());
-        if (optionalAccidentType.isEmpty()) {
+        var rules = rIds.stream()
+                .map(ruleService::findRuleById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
+        if (optionalAccidentType.isEmpty() || rules.size() != rIds.size()) {
             return Optional.empty();
         }
         accident.setType(optionalAccidentType.get());
+        accident.setRules(rules);
         return accidentRepository.save(accident);
     }
 

@@ -4,6 +4,7 @@ import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.Accident;
 import ru.job4j.model.AccidentType;
+import ru.job4j.model.Rule;
 
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @ThreadSafe
 @Repository
-public class AccidentMem implements AccidentRepository, AccidentTypeRepository {
+public class AccidentMem implements AccidentRepository, AccidentTypeRepository, RuleRepository {
 
     /**
      * AtomicInteger предоставляет атомарные операции со значением int
@@ -35,6 +36,12 @@ public class AccidentMem implements AccidentRepository, AccidentTypeRepository {
             new AccidentType(2, "Машина и человек"),
             new AccidentType(3, "Машина и велосипед"),
             new AccidentType(4, "Одна машина"));
+
+    private final List<Rule> rules = List.of(
+            new Rule(1, "Статья. 1"),
+            new Rule(2, "Статья. 2"),
+            new Rule(3, "Статья. 3")
+    );
 
     public AccidentMem() {
         var accident1 = Accident
@@ -126,5 +133,26 @@ public class AccidentMem implements AccidentRepository, AccidentTypeRepository {
     @Override
     public Optional<AccidentType> findTypeById(int id) {
         return Optional.ofNullable(types.get(id - 1));
+    }
+
+    /**
+     * Получить список всех статей
+     *
+     * @return список всех статей
+     */
+    @Override
+    public List<Rule> findAllRules() {
+        return rules;
+    }
+
+    /**
+     * Найти статью по ижентификатору
+     *
+     * @param id идентификатор статьи
+     * @return Optional.of(rule) если статья найдена, иначе Optional.empty()
+     */
+    @Override
+    public Optional<Rule> findRuleById(int id) {
+        return Optional.ofNullable(rules.get(id - 1));
     }
 }

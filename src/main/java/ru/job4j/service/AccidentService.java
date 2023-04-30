@@ -16,9 +16,10 @@ public interface AccidentService {
      * Добавить инцидент в хранилище
      *
      * @param accident инцидент
+     * @param rulesIds список идентификаторов статей
      * @return Optional.of(accident) если инцидент добавлен успешно, иначе Optional.empty()
      */
-    Optional<Accident> save(Accident accident);
+    Optional<Accident> save(Accident accident, List<Integer> rulesIds);
 
     /**
      * Получить список всех инцидентов из хранилища
