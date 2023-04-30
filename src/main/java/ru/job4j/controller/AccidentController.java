@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.model.Accident;
 import ru.job4j.service.AccidentService;
-
-import java.util.Optional;
+import ru.job4j.service.AccidentTypeService;
 
 /**
  * @author Ilya Kaltygin
@@ -25,10 +24,18 @@ public class AccidentController {
     private final AccidentService accidentService;
 
     /**
-     * Возвращает странциу для создания инцидента
+     * Сервис по работе с типами инцидентов
+     */
+    private final AccidentTypeService accidentTypeService;
+
+    /**
+     * Возвращает страницу для создания инцидента
+     *
+     * @param model модель с данными
      */
     @GetMapping("/createAccident")
-    public String viewCreateAccident() {
+    public String viewCreateAccident(Model model) {
+        model.addAttribute("types", accidentTypeService.findAllTypes());
         return "createAccident";
     }
 
@@ -39,7 +46,14 @@ public class AccidentController {
      * @return перенапрвляет на странциу по url "/"
      */
     @PostMapping("/saveAccident")
-    public String save(@ModelAttribute Accident accident) {
+    public String save(@ModelAttribute Accident accident,
+                       Model model) {
+        var accidentTypeOptional = accidentTypeService.findTypeById(accident.getType().getId());
+        if (accidentTypeOptional.isEmpty()) {
+            model.addAttribute("message", "Тип инцидента не найден");
+            return "errors/error";
+        }
+        accident.setType(accidentTypeOptional.get());
         accidentService.save(accident);
         return "redirect:/";
     }
@@ -64,12 +78,18 @@ public class AccidentController {
 
     /**
      * Обновляет инцидент
+     *
      * @param accident инцидент
      * @return перенаправляет на страницу по url "/"
      */
     @PostMapping("/updateAccident")
-    public String update(@ModelAttribute Accident accident) {
-        accidentService.update(accident);
+    public String update(@ModelAttribute Accident accident,
+                         Model model) {
+        var update = accidentService.update(accident);
+        if (!update) {
+            model.addAttribute("message", "Не удалось обновить инцидент");
+            return "errors/error";
+        }
         return "redirect:/";
     }
 

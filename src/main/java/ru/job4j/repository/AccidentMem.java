@@ -3,6 +3,7 @@ package ru.job4j.repository;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.Accident;
+import ru.job4j.model.AccidentType;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @ThreadSafe
 @Repository
-public class AccidentMem implements AccidentRepository {
+public class AccidentMem implements AccidentRepository, AccidentTypeRepository {
 
     /**
      * AtomicInteger предоставляет атомарные операции со значением int
@@ -29,24 +30,33 @@ public class AccidentMem implements AccidentRepository {
      */
     private final Map<Integer, Accident> accidents = new ConcurrentHashMap<Integer, Accident>();
 
+    private final List<AccidentType> types = List.of(
+            new AccidentType(1, "Две машины"),
+            new AccidentType(2, "Машина и человек"),
+            new AccidentType(3, "Машина и велосипед"),
+            new AccidentType(4, "Одна машина"));
+
     public AccidentMem() {
         var accident1 = Accident
                 .builder()
                 .name("Петр Петров")
                 .text("Превышение скорости")
                 .address("Красный проспект 3")
+                .type(findTypeById(4).get())
                 .build();
         var accident2 = Accident
                 .builder()
                 .name("Иван Иванов")
                 .text("Проезд на красный свет светофора")
                 .address("Блюхера 12")
+                .type(findTypeById(4).get())
                 .build();
         var accident3 = Accident
                 .builder()
                 .name("Олег Олегов")
                 .text("Проезд через двойную сплошную")
                 .address("Мичурина 31")
+                .type(findTypeById(4).get())
                 .build();
         save(accident1);
         save(accident2);
@@ -95,5 +105,26 @@ public class AccidentMem implements AccidentRepository {
     @Override
     public Optional<Accident> findById(int id) {
         return Optional.ofNullable(accidents.get(id));
+    }
+
+    /**
+     * Получить список всех типов инцидентов
+     *
+     * @return список со всеми типами инцидентов
+     */
+    @Override
+    public List<AccidentType> findAllTypes() {
+        return types;
+    }
+
+    /**
+     * Найти тип инцидента по идентификатору
+     *
+     * @param id идентификатор типа инцидента
+     * @return Optional.of(accidentType) если тип инцидента найден, иначе Optional.empty()
+     */
+    @Override
+    public Optional<AccidentType> findTypeById(int id) {
+        return Optional.ofNullable(types.get(id - 1));
     }
 }

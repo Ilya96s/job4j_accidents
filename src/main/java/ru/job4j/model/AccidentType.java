@@ -2,27 +2,19 @@ package ru.job4j.model;
 
 import lombok.*;
 
-
 /**
- * Accident - модель данных - правонарушения
+ * AccidentType - модель данных - тип инцидента
  *
  * @author Ilya Kaltygin
  */
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Accident {
+public class AccidentType {
 
     @EqualsAndHashCode.Include
     private int id;
 
     private String name;
-
-    private String text;
-
-    private String address;
-
-    private AccidentType type;
 }
