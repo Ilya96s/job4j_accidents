@@ -43,18 +43,15 @@ public class AccidentController {
      * Соханяет инцидент в хранилище
      *
      * @param accident инцидент
-     * @return перенапрвляет на странциу по url "/"
+     * @return если сохраение прошло успешно, то перенапрвляет на странциу по url "/"
      */
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident,
                        Model model) {
-        var accidentTypeOptional = accidentTypeService.findTypeById(accident.getType().getId());
-        if (accidentTypeOptional.isEmpty()) {
-            model.addAttribute("message", "Тип инцидента не найден");
+        if (accidentService.save(accident).isEmpty()) {
+            model.addAttribute("message", "Не удалось сохранить инцидент");
             return "errors/error";
         }
-        accident.setType(accidentTypeOptional.get());
-        accidentService.save(accident);
         return "redirect:/";
     }
 
@@ -85,8 +82,7 @@ public class AccidentController {
     @PostMapping("/updateAccident")
     public String update(@ModelAttribute Accident accident,
                          Model model) {
-        var update = accidentService.update(accident);
-        if (!update) {
+        if (!accidentService.update(accident.getId())) {
             model.addAttribute("message", "Не удалось обновить инцидент");
             return "errors/error";
         }

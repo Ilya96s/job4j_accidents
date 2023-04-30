@@ -30,10 +30,10 @@ public interface AccidentService {
     /**
      * Обновить инцидент
      *
-     * @param accident инцидент
+     * @param id идентификатор инцидента
      * @return true если инцидент обновлен успешно, иначе false
      */
-    boolean update(Accident accident);
+    boolean update(int id);
 
     /**
      * Найти инцидент по идентификатору

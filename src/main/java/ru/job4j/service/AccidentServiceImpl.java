@@ -3,6 +3,7 @@ package ru.job4j.service;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.model.Accident;
+import ru.job4j.model.AccidentType;
 import ru.job4j.repository.AccidentRepository;
 
 import java.util.List;
@@ -23,6 +24,11 @@ public class AccidentServiceImpl implements AccidentService {
     private AccidentRepository accidentRepository;
 
     /**
+     * Сервис по работе с типами инцидентов
+     */
+    private AccidentTypeService accidentTypeService;
+
+    /**
      * Добавить инцидент в хранилище
      *
      * @param accident инцидент
@@ -30,6 +36,11 @@ public class AccidentServiceImpl implements AccidentService {
      */
     @Override
     public Optional<Accident> save(Accident accident) {
+        var optionalAccidentType = accidentTypeService.findTypeById(accident.getType().getId());
+        if (optionalAccidentType.isEmpty()) {
+            return Optional.empty();
+        }
+        accident.setType(optionalAccidentType.get());
         return accidentRepository.save(accident);
     }
 
@@ -46,12 +57,16 @@ public class AccidentServiceImpl implements AccidentService {
     /**
      * Обновить инцидент
      *
-     * @param accident инцидент
+     * @param id идентификатор инцидента
      * @return true если инцидент обновлен успешно, иначе false
      */
     @Override
-    public boolean update(Accident accident) {
-        return accidentRepository.update(accident);
+    public boolean update(int id) {
+        var optionalAccident = accidentRepository.findById(id);
+        if (optionalAccident.isEmpty()) {
+            return false;
+        }
+        return accidentRepository.update(optionalAccident.get());
     }
 
     /**
