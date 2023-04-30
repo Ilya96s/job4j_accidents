@@ -42,4 +42,26 @@ public class AccidentServiceImpl implements AccidentService {
     public List<Accident> findAll() {
         return accidentRepository.findAll();
     }
+
+    /**
+     * Обновить инцидент
+     *
+     * @param accident инцидент
+     * @return true если инцидент обновлен успешно, иначе false
+     */
+    @Override
+    public boolean update(Accident accident) {
+        return accidentRepository.update(accident);
+    }
+
+    /**
+     * Найти инцидент по идентификатору
+     *
+     * @param id идентификатор инцидента
+     * @return Optional.of(accident) если инцидент по заданному идентификатору найден в хранилище, иначе Optional.empty()
+     */
+    @Override
+    public Optional<Accident> findById(int id) {
+        return accidentRepository.findById(id);
+    }
 }

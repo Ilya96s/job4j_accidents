@@ -74,4 +74,26 @@ public class AccidentMem implements AccidentRepository {
     public List<Accident> findAll() {
         return accidents.values().stream().toList();
     }
+
+    /**
+     * Обновить инцидент
+     *
+     * @param accident инцидент
+     * @return true если инцидент обновлен успешно, иначе false
+     */
+    @Override
+    public boolean update(Accident accident) {
+        return accidents.replace(accident.getId(), accidents.get(accident.getId()), accident);
+    }
+
+    /**
+     * Найти инцидент по идентификатору
+     *
+     * @param id идентификатор инцидента
+     * @return Optional.of(accident) если инцидент по заданному идентификатору найден в хранилище, иначе Optional.empty()
+     */
+    @Override
+    public Optional<Accident> findById(int id) {
+        return Optional.ofNullable(accidents.get(id));
+    }
 }

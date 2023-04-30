@@ -26,4 +26,20 @@ public interface AccidentService {
      * @return список всех инцидентов
      */
     List<Accident> findAll();
+
+    /**
+     * Обновить инцидент
+     *
+     * @param accident инцидент
+     * @return true если инцидент обновлен успешно, иначе false
+     */
+    boolean update(Accident accident);
+
+    /**
+     * Найти инцидент по идентификатору
+     *
+     * @param id идентификатор инцидента
+     * @return Optional.of(accident) если инцидент по заданному идентификатору найден в хранилище, иначе Optional.empty()
+     */
+    Optional<Accident> findById(int id);
 }
