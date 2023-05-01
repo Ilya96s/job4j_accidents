@@ -5,6 +5,8 @@ import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.model.Accident;
 import ru.job4j.repository.AccidentRepository;
+import ru.job4j.repository.AccidentTypeRepository;
+import ru.job4j.repository.RuleRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,12 +30,12 @@ public class AccidentServiceImpl implements AccidentService {
     /**
      * Сервис по работе с типами инцидентов
      */
-    private final AccidentTypeService accidentTypeService;
+    private final AccidentTypeRepository accidentTypeRepository;
 
     /**
      * Сервис по работе со статьями
      */
-    private final RuleService ruleService;
+    private final RuleRepository ruleRepository;
 
     /**
      * Добавить инцидент в хранилище
@@ -44,9 +46,9 @@ public class AccidentServiceImpl implements AccidentService {
      */
     @Override
     public Optional<Accident> save(Accident accident, List<Integer> rIds) {
-        var optionalAccidentType = accidentTypeService.findTypeById(accident.getType().getId());
+        var optionalAccidentType = accidentTypeRepository.findTypeById(accident.getType().getId());
         var rules = rIds.stream()
-                .map(ruleService::findRuleById)
+                .map(ruleRepository::findRuleById)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet());
