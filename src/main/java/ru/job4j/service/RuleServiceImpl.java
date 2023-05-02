@@ -1,6 +1,9 @@
 package ru.job4j.service;
 
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.job4j.model.Rule;
+import ru.job4j.repository.RuleRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +13,11 @@ import java.util.Optional;
  *
  * @author Ilya Kaltygin
  */
+@Service
+@AllArgsConstructor
 public class RuleServiceImpl implements RuleService {
+
+    private final RuleRepository ruleRepository;
 
     /**
      * Получить список всех статей
@@ -19,7 +26,7 @@ public class RuleServiceImpl implements RuleService {
      */
     @Override
     public List<Rule> findAllRules() {
-        return null;
+        return ruleRepository.findAllRules();
     }
 
     /**
@@ -30,6 +37,6 @@ public class RuleServiceImpl implements RuleService {
      */
     @Override
     public Optional<Rule> findRuleById(int id) {
-        return Optional.empty();
+        return ruleRepository.findRuleById(id);
     }
 }

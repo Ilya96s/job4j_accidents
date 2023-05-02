@@ -28,12 +28,12 @@ public class AccidentServiceImpl implements AccidentService {
     private final AccidentRepository accidentRepository;
 
     /**
-     * Сервис по работе с типами инцидентов
+     * Хранилище типов инцидентов
      */
     private final AccidentTypeRepository accidentTypeRepository;
 
     /**
-     * Сервис по работе со статьями
+     * Хранилище статей
      */
     private final RuleRepository ruleRepository;
 
