@@ -2,6 +2,8 @@ package ru.job4j.model;
 
 import lombok.*;
 
+import javax.persistence.*;
+
 /**
  * AccidentType - модель данных - тип инцидента
  *
@@ -11,9 +13,13 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Entity
+@Table(name = "accidentTypes")
 public class AccidentType {
 
     @EqualsAndHashCode.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;

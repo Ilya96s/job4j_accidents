@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 /**
- * JdbcConfig - конфигурационный класс
+ * JdbcConfig - конфигурационный класс JdbcTemplate
  *
  * @author Ilya Kaltygin
  */
