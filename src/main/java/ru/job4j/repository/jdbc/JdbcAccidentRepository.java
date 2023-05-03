@@ -84,6 +84,11 @@ public class JdbcAccidentRepository implements AccidentRepository {
             WHERE id = ?
             """;
 
+    private static final String REMOVE_ASSOCIATION_ACCIDENT_AND_RULE = """
+            DELETE FROM accidents_rules
+            WHERE accident_id = ?
+            """;
+
 
     /**
      * Добавить инцидент в хранилище
@@ -133,6 +138,7 @@ public class JdbcAccidentRepository implements AccidentRepository {
      */
     @Override
     public boolean update(Accident accident) {
+        removeAssociationAccidentAndRule(accident.getId());
         var result = jdbcTemplate.update(
                 UPDATE_ACCIDENT,
                 accident.getName(),
@@ -181,5 +187,14 @@ public class JdbcAccidentRepository implements AccidentRepository {
      */
     private Set<Rule> getRules(int accidentId) {
         return new HashSet<>(jdbcRuleRepository.getRulesByAccidentId(accidentId));
+    }
+
+    /**
+     * Удалить связи между Accident и Rule
+     *
+     * @param id инцидента
+     */
+    private void removeAssociationAccidentAndRule(int id) {
+        jdbcTemplate.update(REMOVE_ASSOCIATION_ACCIDENT_AND_RULE, id);
     }
 }
