@@ -3,6 +3,7 @@ package ru.job4j.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -41,5 +42,5 @@ public class Accident {
             name = "accidents_rules",
             joinColumns = {@JoinColumn(name = "accident_id")},
             inverseJoinColumns = {@JoinColumn(name = "rule_id")})
-    private Set<Rule> rules;
+    private Set<Rule> rules = new HashSet<>();
 }
