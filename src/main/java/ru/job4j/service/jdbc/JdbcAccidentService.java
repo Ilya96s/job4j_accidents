@@ -3,11 +3,13 @@ package ru.job4j.service.jdbc;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.model.Accident;
+import ru.job4j.model.Rule;
 import ru.job4j.repository.jdbc.JdbcAccidentRepository;
 import ru.job4j.repository.jdbc.JdbcAccidentTypeRepository;
 import ru.job4j.repository.jdbc.JdbcRuleRepository;
 import ru.job4j.service.AccidentService;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,11 +48,7 @@ public class JdbcAccidentService implements AccidentService {
     @Override
     public Optional<Accident> save(Accident accident, List<Integer> rIds) {
         var optionalAccidentType = jdbcAccidentTypeRepository.findTypeById(accident.getType().getId());
-        var rules = rIds.stream()
-                .map(jdbcRuleRepository::findRuleById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toSet());
+        var rules = new HashSet<>(jdbcRuleRepository.getRulesByAccidentId(accident.getId()));
         if (optionalAccidentType.isEmpty() || rules.size() != rIds.size()) {
             return Optional.empty();
         }

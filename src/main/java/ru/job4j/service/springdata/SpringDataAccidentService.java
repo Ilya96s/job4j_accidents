@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.job4j.model.Accident;
+import ru.job4j.model.Rule;
 import ru.job4j.repository.springdata.SpringDataAccidentRepository;
 import ru.job4j.repository.springdata.SpringDataAccidentTypeRepository;
 import ru.job4j.repository.springdata.SpringDataRuleRepository;
 import ru.job4j.service.AccidentService;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,11 +45,7 @@ public class SpringDataAccidentService implements AccidentService {
     @Transactional
     public Optional<Accident> save(Accident accident, List<Integer> rulesIds) {
         var optionalAccidentType = accidentTypeRepository.findById(accident.getType().getId());
-        var rules = rulesIds.stream()
-                .map(ruleRepository::findById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toSet());
+        var rules = new HashSet<>(ruleRepository.getRulesByAccidentId(accident.getId()));
         if (optionalAccidentType.isEmpty() || rules.size() != rulesIds.size()) {
             return Optional.empty();
         }
@@ -63,7 +61,7 @@ public class SpringDataAccidentService implements AccidentService {
      */
     @Override
     public List<Accident> findAll() {
-        return (List<Accident>) accidentRepository.findAll();
+        return accidentRepository.findAll();
     }
 
     /**

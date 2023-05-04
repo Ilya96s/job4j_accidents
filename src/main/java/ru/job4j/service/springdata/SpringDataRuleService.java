@@ -32,7 +32,7 @@ public class SpringDataRuleService implements RuleService {
      */
     @Override
     public List<Rule> findAllRules() {
-        return (List<Rule>) ruleRepository.findAll();
+        return ruleRepository.findAll();
     }
 
     /**

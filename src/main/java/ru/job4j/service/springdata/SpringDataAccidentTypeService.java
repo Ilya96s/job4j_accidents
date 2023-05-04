@@ -30,7 +30,7 @@ public class SpringDataAccidentTypeService implements AccidentTypeService {
      */
     @Override
     public List<AccidentType> findAllTypes() {
-        return (List<AccidentType>) accidentTypeRepository.findAll();
+        return accidentTypeRepository.findAll();
     }
 
     /**

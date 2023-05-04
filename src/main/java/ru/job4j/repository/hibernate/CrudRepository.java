@@ -15,6 +15,17 @@ public interface CrudRepository {
 
     /**
      * Метод принимает параметры и создает из них команду.
+     * В этом же методе вызывается метод executeTransaction(Function<Session, T> command), который выполняет созданную команду.
+     * @param query запрос.
+     * @param cl Класс, данные какого типа хотим получить.
+     * @param args карта,где ключ = псевдоним, значение = значение псевдонима.
+     * @return List<T>>
+     * @param <T> generic.
+     */
+    <T> List<T> queryAndGetList(String query, Class<T> cl, Map<String, Object> args);
+
+    /**
+     * Метод принимает параметры и создает из них команду.
      * @param query запрос.
      * @param cl Класс, данные какого типа хотим получить.
      * @return List<T>>
