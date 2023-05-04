@@ -1,16 +1,12 @@
 package ru.job4j.repository.hibernate;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.Rule;
 import ru.job4j.repository.RuleRepository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -23,12 +19,9 @@ import java.util.Optional;
 public class HbmRuleRepository implements RuleRepository {
 
     /**
-     * Используется для получения объектов Session.
-     * Отвечает за считывание параметров конфигурации Hibernate и подключение к базе данных.
+     * Реализация паттерна Command
      */
-    private final SessionFactory sessionFactory;
-
-    private static final Logger LOG = LoggerFactory.getLogger(HbmRuleRepository.class);
+    private final CrudRepository crudRepository;
 
     private static final String FIND_ALL = """
             From Rule
@@ -46,22 +39,7 @@ public class HbmRuleRepository implements RuleRepository {
      */
     @Override
     public List<Rule> findAllRules() {
-        var session = sessionFactory.openSession();
-        Transaction tx = null;
-        List<Rule> rules = new ArrayList<>();
-        try {
-            tx = session.getTransaction();
-            rules = session.createQuery(FIND_ALL, Rule.class).getResultList();
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            LOG.error("Exception in the findAllRules() method", e);
-        } finally {
-            session.close();
-        }
-        return rules;
+        return crudRepository.queryAndGetList(FIND_ALL, Rule.class);
     }
 
     /**
@@ -72,23 +50,6 @@ public class HbmRuleRepository implements RuleRepository {
      */
     @Override
     public Optional<Rule> findRuleById(int id) {
-        var session = sessionFactory.openSession();
-        Transaction tx = null;
-        Optional<Rule> optionalRule = Optional.empty();
-        try {
-            tx = session.getTransaction();
-            session.createQuery(FIND_BY_ID, Rule.class)
-                    .setParameter("id", id)
-                    .uniqueResultOptional();
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            LOG.error("Exception in the findRuleById(int id) method", e);
-        } finally {
-            session.close();
-        }
-        return optionalRule;
+        return crudRepository.queryAndGetOptional(FIND_BY_ID, Rule.class, Map.of("id", id));
     }
 }

@@ -1,16 +1,12 @@
 package ru.job4j.repository.hibernate;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.Accident;
 import ru.job4j.repository.AccidentRepository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -23,12 +19,9 @@ import java.util.Optional;
 public class HbmAccidentRepository implements AccidentRepository {
 
     /**
-     * Используется для получения объектов Session.
-     * Отвечает за считывание параметров конфигурации Hibernate и подключение к базе данных.
+     * Реализация паттерна Command
      */
-    private final SessionFactory sessionFactory;
-
-    private static final Logger LOG = LoggerFactory.getLogger(HbmAccidentRepository.class);
+    private final CrudRepository crudRepository;
 
     private static final String FIND_ALL = """
             From Accident as ac
@@ -49,20 +42,7 @@ public class HbmAccidentRepository implements AccidentRepository {
      */
     @Override
     public Optional<Accident> save(Accident accident) {
-        var session = sessionFactory.openSession();
-        Transaction tx = null;
-        try {
-            tx = session.getTransaction();
-            session.save(accident);
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            LOG.error("Exception in the save(Accident accident) method", e);
-        } finally {
-            session.close();
-        }
+        crudRepository.run(session -> session.save(accident));
         return Optional.of(accident);
     }
 
@@ -73,22 +53,7 @@ public class HbmAccidentRepository implements AccidentRepository {
      */
     @Override
     public List<Accident> findAll() {
-        var session = sessionFactory.openSession();
-        List<Accident> accidents = new ArrayList<>();
-        Transaction tx = null;
-        try {
-            tx = session.getTransaction();
-            accidents = session.createQuery(FIND_ALL, Accident.class).getResultList();
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            LOG.error("Exception in the findAll() method", e);
-        } finally {
-            session.close();
-        }
-        return accidents;
+        return crudRepository.queryAndGetList(FIND_ALL, Accident.class);
     }
 
     /**
@@ -99,23 +64,7 @@ public class HbmAccidentRepository implements AccidentRepository {
      */
     @Override
     public boolean update(Accident accident) {
-        var session = sessionFactory.openSession();
-        boolean rsl = false;
-        Transaction tx = null;
-        try {
-            tx = session.getTransaction();
-            session.update(accident);
-            tx.commit();
-            rsl = true;
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            LOG.error("Exception in the update(Accident accident) method", e);
-        } finally {
-            session.close();
-        }
-        return rsl;
+        return crudRepository.executeAndGetBoolean(accident);
     }
 
     /**
@@ -126,23 +75,6 @@ public class HbmAccidentRepository implements AccidentRepository {
      */
     @Override
     public Optional<Accident> findById(int id) {
-        var session = sessionFactory.openSession();
-        Optional<Accident> optionalAccident = Optional.empty();
-        Transaction tx = null;
-        try {
-            tx = session.getTransaction();
-            optionalAccident = session.createQuery(FIND_BY_ID, Accident.class)
-                    .setParameter("id", id)
-                    .uniqueResultOptional();
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            LOG.error("Exception in the findById(int id) method", e);
-        } finally {
-            session.close();
-        }
-        return optionalAccident;
+        return crudRepository.queryAndGetOptional(FIND_BY_ID, Accident.class, Map.of("id", id));
     }
 }

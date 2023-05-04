@@ -1,16 +1,12 @@
 package ru.job4j.repository.hibernate;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.AccidentType;
 import ru.job4j.repository.AccidentTypeRepository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -23,12 +19,9 @@ import java.util.Optional;
 public class HbmAccidentTypeRepository implements AccidentTypeRepository {
 
     /**
-     * Используется для получения объектов Session.
-     * Отвечает за считывание параметров конфигурации Hibernate и подключение к базе данных.
+     * Реализация паттерна Command
      */
-    private final SessionFactory sessionFactory;
-
-    private static final Logger LOG = LoggerFactory.getLogger(HbmAccidentTypeRepository.class);
+    private final CrudRepository crudRepository;
 
     private static final String FIND_ALL = """
             From AccidentType
@@ -46,22 +39,7 @@ public class HbmAccidentTypeRepository implements AccidentTypeRepository {
      */
     @Override
     public List<AccidentType> findAllTypes() {
-        var session = sessionFactory.openSession();
-        Transaction tx = null;
-        List<AccidentType> accidentTypes = new ArrayList<>();
-        try {
-            tx = session.getTransaction();
-            accidentTypes = session.createQuery(FIND_ALL, AccidentType.class).getResultList();
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            LOG.error("Exception in the findAllTypes() method", e);
-        } finally {
-            session.close();
-        }
-        return accidentTypes;
+        return crudRepository.queryAndGetList(FIND_ALL, AccidentType.class);
     }
 
     /**
@@ -72,21 +50,6 @@ public class HbmAccidentTypeRepository implements AccidentTypeRepository {
      */
     @Override
     public Optional<AccidentType> findTypeById(int id) {
-        var session = sessionFactory.openSession();
-        Transaction tx = null;
-        Optional<AccidentType> optionalAccidentType = Optional.empty();
-        try {
-            tx = session.getTransaction();
-            optionalAccidentType = session.createQuery(FIND_BY_ID, AccidentType.class).uniqueResultOptional();
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            LOG.error("Exception in the findTypeById(int id) method", e);
-        } finally {
-            session.close();
-        }
-        return optionalAccidentType;
+        return crudRepository.queryAndGetOptional(FIND_BY_ID, AccidentType.class, Map.of("id", id));
     }
 }
