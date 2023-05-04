@@ -32,10 +32,9 @@ public class HbmRuleRepository implements RuleRepository {
             WHERE rule.id = :id
             """;
 
-    private static final String FIND_RULES_BY_ACCIDENT_ID = """
-            SELECT r FROM Accident as a
-            JOIN a.rules as r
-            WHERE a.id = :id
+    private static final String FIND_RULES_BY_IDS = """
+            FROM Rule as rule
+            WHERE rule.id IN :rIds
             """;
 
     /**
@@ -60,12 +59,12 @@ public class HbmRuleRepository implements RuleRepository {
     }
 
     /**
-     * Найти статьи относящиеся к инциденту по его идентификатору
+     * Найти статьи по идентификаторам
      *
-     * @param accidentId идентификатор инцидента
+     * @param rIds список идентификаторов
      * @return список статей
      */
-    public List<Rule> getRulesByAccidentId(int accidentId) {
-        return crudRepository.queryAndGetList(FIND_RULES_BY_ACCIDENT_ID, Rule.class, Map.of("id", accidentId));
+    public List<Rule> findRulesByIds(List<Integer> rIds) {
+        return crudRepository.queryAndGetList(FIND_RULES_BY_IDS, Rule.class, Map.of("rIds", rIds));
     }
 }

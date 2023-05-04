@@ -21,16 +21,10 @@ public interface SpringDataRuleRepository extends CrudRepository<Rule, Integer> 
     List<Rule> findAll();
 
     /**
-     * Найти статьи относящиеся к инциденту по его идентификатору
+     * Найти статьи по идентификаторам
      *
-     * @param accidentId идентификатор инцидента
+     * @param rIds сисок идентификаторов
      * @return список статей
      */
-    @Query(
-            name = """
-                    SELECT r FROM Accident as a
-                    JOIN a.rules as r
-                    WHERE a.id = :id
-                            """)
-    List<Rule> getRulesByAccidentId(int accidentId);
+    List<Rule> findByIdIn(List<Integer> rIds);
 }

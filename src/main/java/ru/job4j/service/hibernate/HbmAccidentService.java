@@ -3,7 +3,6 @@ package ru.job4j.service.hibernate;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.model.Accident;
-import ru.job4j.model.Rule;
 import ru.job4j.repository.hibernate.HbmAccidentRepository;
 import ru.job4j.repository.hibernate.HbmAccidentTypeRepository;
 import ru.job4j.repository.hibernate.HbmRuleRepository;
@@ -12,7 +11,6 @@ import ru.job4j.service.AccidentService;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * HbmAccidentService - реализация сервиса по работе с инцидентами
@@ -46,7 +44,7 @@ public class HbmAccidentService implements AccidentService {
     @Override
     public Optional<Accident> save(Accident accident, List<Integer> rulesIds) {
         var optionalAccidentType = accidentTypeRepository.findTypeById(accident.getType().getId());
-        var rules = new HashSet<>(ruleRepository.getRulesByAccidentId(accident.getId()));
+        var rules = new HashSet<>(ruleRepository.findRulesByIds(rulesIds));
         if (optionalAccidentType.isEmpty() || rules.size() != rulesIds.size()) {
             return Optional.empty();
         }
