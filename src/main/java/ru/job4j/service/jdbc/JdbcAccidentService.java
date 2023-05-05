@@ -48,7 +48,7 @@ public class JdbcAccidentService implements AccidentService {
     @Override
     public Optional<Accident> save(Accident accident, List<Integer> rIds) {
         var optionalAccidentType = jdbcAccidentTypeRepository.findTypeById(accident.getType().getId());
-        var rules = new HashSet<>(jdbcRuleRepository.getRulesByAccidentId(accident.getId()));
+        var rules = jdbcRuleRepository.getRulesByAccidentId(accident.getId());
         if (optionalAccidentType.isEmpty() || rules.size() != rIds.size()) {
             return Optional.empty();
         }

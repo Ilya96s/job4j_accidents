@@ -45,7 +45,7 @@ public class SpringDataAccidentService implements AccidentService {
     @Transactional
     public Optional<Accident> save(Accident accident, List<Integer> rulesIds) {
         var optionalAccidentType = accidentTypeRepository.findById(accident.getType().getId());
-        var rules = new HashSet<>(ruleRepository.findByIdIn(rulesIds));
+        var rules = ruleRepository.findByIdIn(rulesIds);
         if (optionalAccidentType.isEmpty() || rules.size() != rulesIds.size()) {
             return Optional.empty();
         }

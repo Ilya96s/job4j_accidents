@@ -7,8 +7,11 @@ import org.springframework.stereotype.Repository;
 import ru.job4j.model.Rule;
 import ru.job4j.repository.RuleRepository;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * JdbcRuleRepository - реализация хранилища статей с помощью JdbcTemplate
@@ -69,7 +72,7 @@ public class JdbcRuleRepository implements RuleRepository {
      * @param accidentId идентификатор инцидента
      * @return список статей
      */
-    public List<Rule> getRulesByAccidentId(int accidentId) {
-        return jdbcTemplate.query(FIND_RULES_BY_ACCIDENT_ID, ruleRowMapper, accidentId);
+    public Set<Rule> getRulesByAccidentId(int accidentId) {
+        return new HashSet<>(jdbcTemplate.query(FIND_RULES_BY_ACCIDENT_ID, ruleRowMapper, accidentId));
     }
 }

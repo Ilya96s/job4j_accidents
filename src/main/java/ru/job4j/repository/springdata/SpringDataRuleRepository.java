@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import ru.job4j.model.Rule;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * SprigDataRuleRepository - хранилище статей, реализованное с помощью Spring Data Jpa
@@ -26,5 +27,5 @@ public interface SpringDataRuleRepository extends CrudRepository<Rule, Integer> 
      * @param rIds сисок идентификаторов
      * @return список статей
      */
-    List<Rule> findByIdIn(List<Integer> rIds);
+    Set<Rule> findByIdIn(List<Integer> rIds);
 }

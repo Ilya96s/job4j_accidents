@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -19,10 +20,10 @@ public interface CrudRepository {
      * @param query запрос.
      * @param cl Класс, данные какого типа хотим получить.
      * @param args карта,где ключ = псевдоним, значение = значение псевдонима.
-     * @return List<T>>
+     * @return Set<T>>
      * @param <T> generic.
      */
-    <T> List<T> queryAndGetList(String query, Class<T> cl, Map<String, Object> args);
+    <T> Set<T> queryAndGetList(String query, Class<T> cl, Map<String, Object> args);
 
     /**
      * Метод принимает параметры и создает из них команду.

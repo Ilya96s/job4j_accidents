@@ -8,6 +8,7 @@ import ru.job4j.repository.RuleRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * HbmRuleRepository - реализация хранилища статей с помощью Hibernate
@@ -64,7 +65,7 @@ public class HbmRuleRepository implements RuleRepository {
      * @param rIds список идентификаторов
      * @return список статей
      */
-    public List<Rule> findRulesByIds(List<Integer> rIds) {
+    public Set<Rule> findRulesByIds(List<Integer> rIds) {
         return crudRepository.queryAndGetList(FIND_RULES_BY_IDS, Rule.class, Map.of("rIds", rIds));
     }
 }

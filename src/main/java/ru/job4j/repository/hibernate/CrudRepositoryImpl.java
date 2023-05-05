@@ -11,8 +11,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * CrudRepositoryImpl - реализация паттерна проектирования Command
@@ -41,16 +43,16 @@ public class CrudRepositoryImpl implements CrudRepository {
      * @param query запрос.
      * @param cl Класс, данные какого типа хотим получить.
      * @param args карта,где ключ = псевдоним, значение = значение псевдонима.
-     * @return List<T>>
+     * @return Set<T>>
      * @param <T> generic.
      */
-    public <T> List<T> queryAndGetList(String query, Class<T> cl, Map<String, Object> args) {
-        Function<Session, List<T>> command = session -> {
+    public <T> Set<T> queryAndGetList(String query, Class<T> cl, Map<String, Object> args) {
+        Function<Session, Set<T>> command = session -> {
             var sq = session.createQuery(query, cl);
             for (Map.Entry<String, Object> arg : args.entrySet()) {
                 sq.setParameter(arg.getKey(), arg.getValue());
             }
-            return sq.list();
+            return sq.stream().collect(Collectors.toSet());
         };
         return executeTransaction(command);
     }

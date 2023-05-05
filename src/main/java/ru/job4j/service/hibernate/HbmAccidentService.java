@@ -44,7 +44,7 @@ public class HbmAccidentService implements AccidentService {
     @Override
     public Optional<Accident> save(Accident accident, List<Integer> rulesIds) {
         var optionalAccidentType = accidentTypeRepository.findTypeById(accident.getType().getId());
-        var rules = new HashSet<>(ruleRepository.findRulesByIds(rulesIds));
+        var rules = ruleRepository.findRulesByIds(rulesIds);
         if (optionalAccidentType.isEmpty() || rules.size() != rulesIds.size()) {
             return Optional.empty();
         }
