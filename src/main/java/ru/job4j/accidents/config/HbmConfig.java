@@ -47,11 +47,11 @@ public class HbmConfig {
      *
      * @param sf объекти типа SessionFactory
      * @return объект типа PlatformTransactionManager
-     */
-    @Bean
+     @Bean
     public PlatformTransactionManager htx(SessionFactory sf) {
         HibernateTransactionManager tx = new HibernateTransactionManager();
         tx.setSessionFactory(sf);
         return tx;
     }
+    */
 }
