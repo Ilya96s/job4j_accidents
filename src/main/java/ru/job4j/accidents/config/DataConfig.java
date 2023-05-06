@@ -19,7 +19,7 @@ import javax.sql.DataSource;
  * @author Ilya Kaltygin
  */
 @Configuration
-@EnableJpaRepositories("ru.job4j.repository.springdata")
+@EnableJpaRepositories("ru.job4j.accidents.repository.springdata")
 @EnableTransactionManagement
 public class DataConfig {
 
