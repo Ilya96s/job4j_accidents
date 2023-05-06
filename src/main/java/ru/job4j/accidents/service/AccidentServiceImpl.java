@@ -25,16 +25,6 @@ public class AccidentServiceImpl implements AccidentService {
      */
     private final AccidentMem accidentMem;
 
-//    /**
-//     * Хранилище типов инцидентов
-//     */
-//    private final AccidentMem accidentTypeRepository;
-//
-//    /**
-//     * Хранилище статей
-//     */
-//    private final AccidentMem ruleRepository;
-
     /**
      * Добавить инцидент в хранилище
      *
