@@ -40,6 +40,7 @@
     <div class="container d-flex justify-content-center">
         <div class="card text-center shadow" style="width: 60rem;">
             <div class="card-body">
+                <span th:text="${errorMessage}" style="color: red;"></span>
                 <form th:action="@{/reg}" method="POST">
                     <div class="row d-flex justify-content-center">
                         <div class="input-group" style="width: 31.5rem; margin-top: 25px; margin-bottom: 5px">
