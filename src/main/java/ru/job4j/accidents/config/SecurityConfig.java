@@ -1,12 +1,16 @@
 package ru.job4j.accidents.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.sql.DataSource;
 
 /**
  * SecurityConfig - конфигурационный класс для Spring Security
@@ -26,6 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Autowired
+    DataSource ds;
+
     /**
      * Используется для настройки аутентификации пользователей в приложении
      * @param auth предоставляет возможность настраивать способы аутентификации пользователей
@@ -33,11 +40,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .passwordEncoder(passwordEncoder())
-                .withUser("user").password(passwordEncoder().encode("123456")).roles("USER")
-                .and()
-                .withUser("admin").password(passwordEncoder().encode("123456")).roles("USER", "ADMIN");
+        auth.jdbcAuthentication()
+                .dataSource(ds)
+                .withUser(User.withUsername("user")
+                        .password(passwordEncoder().encode("123456"))
+                        .roles("USER"));
     }
 
     /**
