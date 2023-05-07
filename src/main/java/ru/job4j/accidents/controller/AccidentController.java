@@ -82,7 +82,7 @@ public class AccidentController {
             return "errors/error";
         }
         model.addAttribute("accident", accidentOptional.get());
-        return "accident/update";
+        return "accident/editAccident";
     }
 
     /**
