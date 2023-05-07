@@ -1,8 +1,6 @@
 package ru.job4j.accidents.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,6 +10,9 @@ import javax.persistence.*;
  * @author Ilya Kaltygin
  */
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(of = "id")
 @Entity
