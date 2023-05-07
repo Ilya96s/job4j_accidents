@@ -15,15 +15,7 @@ public interface SpringDataUserService {
      * Сохранить пользователя в базу данных
      *
      * @param user пользователь
-     * @return сохраненный пользователь
+     * @return Optional.of(user) если пользователь успешно сохранен, иначе Optional.empty()
      */
-    User save(User user);
-
-    /**
-     * Найти пользователя по логину
-     *
-     * @param username логин
-     * @return Optional.of(user) если пользователь найден, иначе Optional.empty()
-     */
-    Optional<User> findByUsername(String username);
+    Optional<User> save(User user);
 }
